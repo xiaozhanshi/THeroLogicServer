@@ -64,7 +64,7 @@ typedef struct Props_s            //存放原材料主分类pcate、次分类pframe 及材料种
 {
 	int pcate;
 	int pframe;
-	int num;
+	int num;     //数量
 }Props_T;
 
 typedef struct ResourceMechineProductype_s     //能源机生产类型结构
