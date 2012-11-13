@@ -1,0 +1,10 @@
+MD5静态类用法
+
+1将两个文件(MD5.cpp & MD5.h)拷贝并添加到你的项目,并在合适的地方(比如StdAfx.h中)#include "MD5.h"
+2在需要对内容进行MD5编码时代码形如:
+
+char sz[]="63312323123";
+char szHex[40]={0};
+CMD5::MD5((unsigned char *)sz,strlen(sz),szHex);
+如果需要转大写:strupr(szHex);
+

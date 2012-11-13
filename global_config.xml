@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ant_wars>
+	<GAME>
+		<TIMES maxIdleTime="180"/>
+	</GAME>
+	<CLIENT VER="1.4.1.0117"/>
+	<AWARD minchips="180" maxchips="220"/>
+	<Monitor HOST='192.168.1.107' PORT='9101' ENABLE='1' />
+	<QuickChagneRoom enable='1'/>
+	<MSGQ HOST='192.168.1.107' PORT='8099'/>
+	<DB host='127.0.0.1' port='3306' user='root' passwd='123' db='MCHeroDB'/>
+	<POWER max='50' step='24' />
+</ant_wars>
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ant_wars>
+	<CentServer host="192.168.1.105" port="8844" />
+	<ServerInfo GroupID="0" ServerID='10' ServerType='10' IP='192.168.1.105' PORT='17093'/>
+	<SID id='0'  />
+	<RedisServer HOST='192.168.1.105' PORT='6379' />
+	<AdminMsgDbName dbname="herodb" />
+	<HonorInfo dbname="windones" OpenPro="1" />
+	<PHPAPI URL="http://192.168.1.107/windones/api/serverapi.php" PWD="(6@5$4%%0^1*0!9{5[2" />
+	<GLOBAL path='./global_config.xml'/>
+    <CreateNewUser Sql="INSERT INTO `Player_Account`(`nickName`, `money`, `exp`, `mstatus`, `level`, `coin`, `fbheadID`, `mtime`, `continueLoginDate`, `sex`)VALUES ('游侠', '5000', '0', '0', '0', '0', '0', '0', '0', '0');" />
+	<CreateUserBase Sql="INSERT INTO `UserBaseTable`(`mid`, `basesizex`, `basesizey`, `status`, `endtimer`, `wallsizex`, `wallsizey`)VALUES ('0', '7', '7', '0', '0', '7', '3');" />
+	<REPLY_IPHONE_LOGIN CMD='1003'>
+		<spec dbitem="mid" type="int"/>
+		<spec dbitem="money" type="int"/>
+	</REPLY_IPHONE_LOGIN>
+        <REPLY_REGIST CMD='10404'>
+                <spec dbitem="mid" type="int"/>
+        </REPLY_REGIST>
+</ant_wars>
+
+
