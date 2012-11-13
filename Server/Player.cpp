@@ -21,6 +21,11 @@ CPlayer::CPlayer(uint32 uuid, TcpHandler * pHandler,CGameServer* pServer)
 	m_istatus = 0;
 	m_ibasew = 7;
 	m_ibaseh = 7;
+	m_PowA = 0;
+	m_PowB = 0;
+	m_PowC = 0;
+	m_PowD = 0;
+	m_PowE = 0;
 }
 
 CPlayer::~CPlayer(void)
@@ -505,4 +510,56 @@ void CPlayer::ProcessMechineWriteDB()
 	}
 
 
+}
+
+
+void CPlayer::SetPow(int ptype, int pvalue)
+{
+	switch (ptype) 
+	{
+	case 1:
+		m_PowA = pvalue;
+		break;
+	case 2:
+		m_PowB = pvalue;
+		break;
+	case 3:
+		m_PowC = pvalue;
+		break;
+	case 4:
+		m_PowD = pvalue;
+		break;
+	case 5:
+		m_PowE = pvalue;
+		break;
+	default:
+		break;
+	}
+}
+
+uint32	CPlayer::GetPow(int ptype)
+{
+	uint32 pvalue = 0;
+	switch (ptype) 
+	{
+	case 1:
+		pvalue = m_PowA;
+		break;
+	case 2:
+		pvalue = m_PowB;
+		break;
+	case 3:
+		pvalue = m_PowC;
+		break;
+	case 4:
+		pvalue = m_PowD;
+		break;
+	case 5:
+		pvalue = m_PowE;
+		break;
+	default:
+		break;
+	}
+
+	return pvalue;
 }

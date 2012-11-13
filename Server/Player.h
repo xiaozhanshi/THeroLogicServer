@@ -230,6 +230,10 @@ public:
 	}
 	virtual int ProcessOnTimerOut(int Timerid);
 
+	// 主角相关
+	// 能源 函数
+	void	SetPow(int ptype, int pvalue);		//pyte 1 -- a,2 --- b,3 --- c,4 --- d,5 ---e
+	uint32	GetPow(int ptype);					//pyte 1 -- a,2 --- b,3 --- c,4 --- d,5 ---e
 public:
 	int m_istatus;		// status	// base 基地信息
 	int m_ibasew;		// base width
@@ -258,6 +262,13 @@ private:
     TcpHandler*  m_pSocketHandler;
 	string		m_sUserName;             // 玩家名字
 	string		m_sPassWord;			 // 玩家密码
+
+	// 主角信息
+	uint32		m_PowA;					 // 能源A
+	uint32		m_PowB;					 // 能源B
+	uint32		m_PowC;					 // 能源C
+	uint32		m_PowD;					 // 能源D
+	uint32		m_PowE;					 // 能源E
 };
 
 #endif //_PLAYER_H_
