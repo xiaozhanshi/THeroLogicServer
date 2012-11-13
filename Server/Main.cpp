@@ -17,6 +17,7 @@ using namespace std;
 // 3. redis缓存服务器
 // 4. 初始化网络
 // 5. 初始化服务器
+// 6. 释放资源
 
 int main(int argc, char ** argv)
 {
