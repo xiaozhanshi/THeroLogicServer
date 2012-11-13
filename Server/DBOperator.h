@@ -262,7 +262,7 @@ public:
 	bool UpdateUserInfoMechineCollectTable(UserInfoMechineCollect_T & UserInfoCollect);
 	bool UpdateUserResMechineProducTable(ResourceProducTable_T & UserResProduc); //更改用户能源机生产表(定时器里用）
 	bool UpdateUserProducTable(ResourceProducTable_T & ResProduc);  //更改用户能源机生产表（能源机生产里用）
-	bool UpdateUserMechineTable(User_Experiment_Mechine_t& UserExperimentMechine);
+	bool UpdateUserMechineTable(User_Experiment_Mechine_t& UserExperimentMechine);//更改用户机器表
 	bool UpdateUserBase(BaseInfo_Struct_t& Baseinfo, int gameMid);
 	bool UpdateUserMoney(int gameMid, int coin, int money);
 	bool CheckAndAddUser(const string & IphoneMac, string& NickName, int & gameMid);
