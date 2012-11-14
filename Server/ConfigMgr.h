@@ -171,6 +171,10 @@ public:
 	{
 		return m_Info_Mechine;
 	}
+	const MechineType_PcatePframe_T & getRole_Type()const
+	{
+		return m_Role;
+	}
 	const MechineType_PcatePframe_T & getMechine_Resource_Type()const
 	{
 		return m_Resource_Mechine;
@@ -288,7 +292,9 @@ private:
 
 	MechineType_PcatePframe_T m_Info_Mechine;		// 情报机
 	MechineType_PcatePframe_T m_Resource_Mechine;	// 资源机
+	MechineType_PcatePframe_T m_Role;	// 主角
 	MechineComStructTimeTable_List m_Mechine_ConStructTimeList;		// 升级消耗表
+
 };
 
 // 获取配置管理对象

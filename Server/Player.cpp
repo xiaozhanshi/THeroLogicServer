@@ -563,3 +563,19 @@ uint32	CPlayer::GetPow(int ptype)
 
 	return pvalue;
 }
+
+void CPlayer::SetUserInfo(UserGameInfo_Struct_t userData)
+{
+	m_coin = userData.coin;
+	m_money = userData.money;
+	m_nPlayerLevel = userData.level;
+	m_sUserName = userData.nickName;
+	m_PlatForm = userData.platform;
+	m_sPassWord = userData.password;
+
+	m_PowA = userData.powA;
+	m_PowB = userData.powB;
+	m_PowC = userData.powC;
+	m_PowD = userData.powD;
+	m_PowE = userData.powE;
+}

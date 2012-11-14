@@ -101,6 +101,20 @@ typedef struct ResourceProducTable_s       //用户能源机生产结构
 	bool isDirty;
 }ResourceProducTable_T;
 
+typedef struct UserGameInfo_Struct_s
+{
+	string nickName;
+	string password;
+	int platform;
+	int coin;
+	int money;
+	int level;
+	int powA;
+	int powB;
+	int powC;
+	int powD;
+	int powE;
+}UserGameInfo_Struct_t;
 
 typedef vector<MechineComStructTimeTable_T> MechineComStructTimeTable_List;
 typedef vector<MergeResourseTable_T> MergeResourseTable_list;  //合成道具原材料结构容器

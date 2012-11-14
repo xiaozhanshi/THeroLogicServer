@@ -222,6 +222,8 @@ public:
 	void	ProcessMechineRequire();
 	void	OnUserLogoutServer();
 	void	ProcessMechineWriteDB();
+	
+	void	SetUserInfo(UserGameInfo_Struct_t userData);
 
 	// ÊµÑé»úÆ÷
 	User_Experiment_Mechine_t & getUserExperimentMechine()

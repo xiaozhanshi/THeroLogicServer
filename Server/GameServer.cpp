@@ -3416,36 +3416,30 @@ int CGameServer::Handle_Logon( TcpHandler * pHandler, NETInputPacket * pPacket, 
 {
 	if( pHandler->GetUserData() == NULL )
 	{
-		// todo get reward info
-		// todo update user info
-		// todo get user info 
 		UserGameInfo_Struct_t UserGameInfo;
 		if (!g_GetCDBOperator().GetUserGameInfo(gameMid, UserGameInfo))
 		{
 			SendCommonFlagMsgReply( COMMAND_COMLOGIN_REPLY, 1, pHandler);
 			return 0;
 		}
-
+		
  		uint32 mid = gameMid;
 		string key = "123456789";
-		uint32 nLevel = UserGameInfo.level;
-		string sUserName = "user count";
-		uint32 nPlatForm = 1;
-
+		UserGameInfo.platform = 1;
 		int ishaveemail = pPacket->ReadShort();
 		string email = "email";
-		string upassword;
 		if (ishaveemail != 0)
 		{
 			email = pPacket->ReadString();
 		}
+
 		if (isFb)
 		{
-			sUserName = pPacket->ReadString();
-			upassword = pPacket->ReadString();
+			UserGameInfo.nickName = pPacket->ReadString();
+			UserGameInfo.password = pPacket->ReadString();
 		}
 
-		log_debug(" CGameServer::Logon. UUID:=%d, KEY:=%s. name:%s\n", mid, key.c_str(), sUserName.c_str());
+		log_debug(" CGameServer::Logon. UUID:=%d, KEY:=%s. name:%s\n", mid, key.c_str(), UserGameInfo.nickName.c_str());
 
 		// ÑéÖ¤key
 		if (m_cSecretKey != key)
@@ -3468,13 +3462,8 @@ int CGameServer::Handle_Logon( TcpHandler * pHandler, NETInputPacket * pPacket, 
 		CPlayer * pPlayer = addPlayer( mid, pHandler );
 		if( pPlayer != NULL )
 		{
-            pPlayer->SetLevel(nLevel);
-            pPlayer->SetName(sUserName);
-			pPlayer->SetPlatForm(nPlatForm);
-			pPlayer->SetPassword(upassword);
-			pPlayer->m_coin = UserGameInfo.coin;
-			pPlayer->m_money = UserGameInfo.money;
 			pHandler->SetUserData( pPlayer );
+			pPlayer->SetUserInfo(UserGameInfo);
 		}
         else
         {
@@ -3482,9 +3471,7 @@ int CGameServer::Handle_Logon( TcpHandler * pHandler, NETInputPacket * pPacket, 
 			SendCommonFlagMsgReply( COMMAND_COMLOGIN_REPLY, 1, pHandler);
             return 0;
         }
-		// TODO
-        //LoadFriends(pPlayer);
-		//TODO
+
 		if (isNewData == 1)
 		{
 			//TODO copy iphone data

@@ -80,13 +80,6 @@ typedef struct BaseInfo_Struct_s
 	int iebaseh;
 }BaseInfo_Struct_t;
 
-typedef struct UserGameInfo_Struct_s
-{
-	int coin;
-	int money;
-	int level;
-}UserGameInfo_Struct_t;
-
 typedef vector<GoodsStruct_t > GoodsStruct_t_list;
 
 typedef struct OrmenGoodsStruct_s

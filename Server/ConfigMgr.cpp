@@ -37,6 +37,9 @@ ConfigMgr::ConfigMgr(void)
 	
 	m_Resource_Mechine.pcate = 221;
 	m_Resource_Mechine.pframe = 2005;
+
+	m_Role.pcate = 20;
+	m_Role.pframe = 211;
 }
 
 ConfigMgr::~ConfigMgr(void)

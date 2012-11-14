@@ -1246,6 +1246,16 @@ bool CDBOperator::GetUserGameInfo(int gameId, UserGameInfo_Struct_t & UserGameIn
 	UserGameInfo.coin = result->GetItemLong( 0, "coin" );
 	UserGameInfo.money = result->GetItemLong( 0, "money" );
 	UserGameInfo.level = result->GetItemLong( 0, "level" );
+
+	// pow
+	UserGameInfo.powA = result->GetItemLong( 0, "powA" );
+	UserGameInfo.powB = result->GetItemLong( 0, "powB" );
+	UserGameInfo.powC = result->GetItemLong( 0, "powC" );
+	UserGameInfo.powD = result->GetItemLong( 0, "powD" );
+	UserGameInfo.powE = result->GetItemLong( 0, "powE" );
+
+	UserGameInfo.nickName = result->GetItemString( 0, "nickName" );
+
 	return true;
 }
 
