@@ -3,5 +3,5 @@
 
 
 // implete the GameData
-
-// shit
+//
+// user data shuld implete here
