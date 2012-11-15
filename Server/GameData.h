@@ -106,8 +106,8 @@ typedef struct UserGameInfo_Struct_s
 	string nickName;
 	string password;
 	int platform;
-	int coin;
-	int money;
+	int coin;     //普通货币
+	int money;   //高级货币
 	int level;
 	int powA;
 	int powB;
