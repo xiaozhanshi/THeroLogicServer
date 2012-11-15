@@ -103,7 +103,7 @@ typedef struct ResourceProducTable_s       //用户能源机生产结构
 
 typedef struct UserGameInfo_Struct_s
 {
-	string nickName;
+	string nickName;  //用户名
 	string password;
 	int platform;
 	int coin;     //普通货币
