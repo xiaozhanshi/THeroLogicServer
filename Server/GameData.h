@@ -42,7 +42,7 @@ typedef struct MergeResourseTable_s    //合成道具原材料结构
 	int Gid;
 	int pcate;
 	int pframe;
-}MergeResourseTable_T;
+}MergeResourseTable_T;				// merge
 
 typedef struct MergePKTable_s        //合成道具需要材料种类及数量结构
 {
