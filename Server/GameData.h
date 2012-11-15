@@ -91,7 +91,7 @@ typedef struct ResourceProduc_s     //存放能源机部分属性结构
 typedef struct ResourceProducTable_s       //用户能源机生产结构
 {
 	int Gid;
-	int Mid;
+	int Mid;             //用户ID
 	int Pcate;
 	int Pframe;
 	int Pmode;             //  生产方式
