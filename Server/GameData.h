@@ -42,7 +42,7 @@ typedef struct MergeResourseTable_s    //合成道具原材料结构
 	int Gid;
 	int pcate;
 	int pframe;
-}MergeResourseTable_T;				// merge
+}MergeResourseTable_T;				
 
 typedef struct MergePKTable_s        //合成道具需要材料种类及数量结构
 {
@@ -74,7 +74,7 @@ typedef struct ResourceMechineProductype_s     //能源机生产类型结构
 	int Level;
 	int NeedTime;
 	int Coin;
-	int Power;
+	int Power;    //能量
 	int UserLevel;
 	int Mtime;  //高级货币加速时间
 }ResourceMechineProductype_T;
