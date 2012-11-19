@@ -196,6 +196,9 @@ int CentServer::ProcessPacket(short nMsgType, NETInputPacket *pPacket, CentHandl
 	case COMMAND_MECHINE_RESOURCEPRODUC:
 		m_pGameServer->Handle_Mechine_ResourceProduc(pHandler, pPacket, pHandler->GetProxy());             //   能源机生产
 		break;
+	case COMMAND_MECHINE_RESOURCE_COLLECT:
+		m_pGameServer->Handdle_Mechine_ResourceCollect(pHandler, pPacket, pHandler->GetProxy());           //   能源收集请求
+		break;
 	/////////////////////////////////////////////mechine relate/////////////////////////////////////////////////////////////////
 
 	case CENTER_USER_MSG:                                   // 中心服务器给指定用户的消息

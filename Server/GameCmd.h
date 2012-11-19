@@ -295,6 +295,9 @@ enum
 	COMMAND_MECHINE_RESOURCEPRODUC        = 10417,         //能源机生产
 	COMMAND_MECHINE_RESOURCEPRODUC_REPLAY = 1044,          //能源机生产返回
 
+	COMMAND_MECHINE_RESOURCE_COLLECT        = 10426,       //能源收集
+    COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY = 1054,        //能源收集返回
+
 
 	// mail server
 	COMMAND_FIND_USER_PASSWORD		= 11401,		//查找密码,发到邮箱里面 

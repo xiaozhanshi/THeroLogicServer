@@ -2136,6 +2136,33 @@ bool CDBOperator::GetInfoMechineCollectTableList(InfoMechineCollectTable_list & 
 	return true;
 }
 
+bool CDBOperator::GetUserResourProducInfo(UserResourceProducTable_list & UserResProducList)  //实现获取用户能源表信息
+{
+	QueryResult *result = m_pMysql->PQuery("SELECT * FROM `UserResourceMechineProducTable`;");
+
+	int len = result->RowCount();
+	if ( !result || len == 0)
+	{
+		return false;
+	}
+
+	for (int i = 0; i < len; i++)
+	{
+		ResourceProducTable_T UserItem;
+		UserItem.Gid = result->GetItemLong( i, "Gid" );
+		UserItem.Mid = result->GetItemLong( i, "Mid" );
+		UserItem.Pcate = result->GetItemLong( i, "Pcate" );
+		UserItem.Pframe = result->GetItemLong( i, "Pframe" );
+		UserItem.Pmode = result->GetItemLong( i, "Pmode" );
+		UserItem.Level = result->GetItemLong( i, "Level" );
+		UserItem.State = result->GetItemLong( i, "State" );
+		UserItem.Usetime = result->GetItemLong( i, "Usetime" );
+
+		UserResProducList.push_back(UserItem);
+	}
+	return true;
+}
+
 bool CDBOperator::GetMergeResourseTablelist(MergeResourseTable_list & ResourceTablelist)  //实现获取道具合成原材料
 {
 	QueryResult *result = m_pMysql->PQuery("SELECT * FROM `MergeResourceTable`;");
@@ -2208,12 +2235,14 @@ bool CDBOperator::GetResourceMechineProductypeList(ResourceMechineProductype_lis
 
 		ResourceItem.Pcate = result->GetItemLong( i, "Pcate" );
 		ResourceItem.Pframe = result->GetItemLong( i, "Pframe" );
+		ResourceItem.Pype = result->GetItemLong( i, "Pype" );
 		ResourceItem.Level = result->GetItemLong( i, "Level" );
 		ResourceItem.NeedTime = result->GetItemLong( i, "NeedTime" );
 		ResourceItem.Coin = result->GetItemLong( i, "Coin" );
 		ResourceItem.Power = result->GetItemLong( i, "Power" );
 		ResourceItem.UserLevel = result->GetItemLong( i, "UserLevel" );
 		ResourceItem.Mtime = result->GetItemLong( i, "Mtime" );
+		ResourceItem.resourcetype = result->GetItemLong( i, "resourcetype" );
 		
 		ResourceMechineProductypeList.push_back(ResourceItem);
 	}

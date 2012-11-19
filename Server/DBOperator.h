@@ -308,7 +308,8 @@ public:
 	bool GetRegistReply(const int gameid, NETOutputPacket & pPacket);
 	bool GetMergeResourseTablelist(MergeResourseTable_list & ResourceTablelist);//获取道具合成原材料
 	bool GetMergePKTablelist(MergePKTable_list & MergePKTablelist);  //获取道具合成需要材料种类及数量
-	bool GetResourceMechineProductypeList(ResourceMechineProductype_list & ResourceMechineProductypeList);  //获取能源机生产方式
+	bool GetResourceMechineProductypeList(ResourceMechineProductype_list & ResourceMechineProductypeList);  //获取能源机生产类型表信息
+	bool GetUserResourProducInfo(UserResourceProducTable_list & UserResProducList); // 获取用户能源表信息， 到时候改为用户登录才加载 to do
 	bool InsertUserResourceMechineRecord(ResourceProducTable_T & Record); //插入用户能源机生产表
 private:
     DatabaseMysql*  m_pMysql;

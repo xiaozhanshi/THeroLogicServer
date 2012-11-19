@@ -236,6 +236,11 @@ public:
 	// 能源 函数
 	void	SetPow(int ptype, int pvalue);		//pyte 1 -- a,2 --- b,3 --- c,4 --- d,5 ---e
 	uint32	GetPow(int ptype);					//pyte 1 -- a,2 --- b,3 --- c,4 --- d,5 ---e
+
+public:
+	//获取用户资源生产信息
+	bool getUserResourceProducInfo(int gid, int usid, UserResourceProducTable_list & userResProList, ResourceProducTable_T & userResInfo);
+
 public:
 	int m_istatus;		// status	// base 基地信息
 	int m_ibasew;		// base width
