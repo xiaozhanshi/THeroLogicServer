@@ -421,7 +421,7 @@ void CPlayer::ProcessMechineRequire()
 		}
 		//m_UserResourceProducTable_list[i].Usetime += g_GetConfigMgr().getCheckTime(); //累计时间
 		ResourceMechineProductype_T ResProducInfo;
-		bool ret = m_pServer->getResourceMechine_By_pacte_pfram_level(Item.Pcate, Item.Pframe, Item.Pmode, ResProducInfo);
+		bool ret = m_pServer->getResourceMechine_By_pacte_pfram_level(Item.Pcate, Item.Pframe, Item.Level, Item.Pmode, ResProducInfo);
 		int needtime = ResProducInfo.NeedTime;  // 生产需要的时间
 		int usetime = m_UserResourceProducTable_list[i].Usetime; // 目前累计的时间
 		//m_UserResourceProducTable_list[i].isDirty = true;
@@ -578,4 +578,23 @@ void CPlayer::SetUserInfo(UserGameInfo_Struct_t userData)
 	m_PowC = userData.powC;
 	m_PowD = userData.powD;
 	m_PowE = userData.powE;
+}
+
+bool CPlayer::getUserResourceProducInfo(int gid, int usid, UserResourceProducTable_list & userResProList, ResourceProducTable_T & userResInfo)
+{
+	int len = userResProList.size();
+	bool isfound = false;
+
+	for (int i = 0 ; i < len; i++)
+	{
+		ResourceProducTable_T Item = userResProList[i];
+		if (gid == Item.Gid && usid == Item.Mid)
+		{
+			userResInfo = Item;
+			isfound = true;
+			break;
+		}
+	}
+
+	return isfound;
 }

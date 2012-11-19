@@ -64,19 +64,21 @@ typedef struct Props_s            //存放原材料主分类pcate、次分类pframe 及材料种
 {
 	int pcate;
 	int pframe;
-	int num;     //数量
+	int num;     //需要合成材料的数量
 }Props_T;
 
 typedef struct ResourceMechineProductype_s     //能源机生产类型结构
 {
 	int Pcate;
 	int Pframe;
+	int Pype;  //生产方式
 	int Level;
 	int NeedTime;
 	int Coin;
 	int Power;    //能量
 	int UserLevel;
 	int Mtime;  //高级货币加速时间
+	int resourcetype;  //能源类型
 }ResourceMechineProductype_T;
 
 typedef struct ResourceProduc_s     //存放能源机部分属性结构

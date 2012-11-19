@@ -1164,6 +1164,7 @@ int CGameServer::Handle_User_Info_Mechine_CollectSpeed(TcpHandler * pHandler, NE
 	return 0;
 }
 
+//情报机收集
 int CGameServer::Handle_User_Info_Mechine_CollectCoin(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId)
 {
 	int pcate = pPacket->ReadInt();
@@ -2215,9 +2216,12 @@ void CGameServer::LoadSystemMsg()
 	g_GetCDBOperator().GetMergePKTablelist(m_MergePKTablelist);
 	log_debug("the m_MergePKTablelist size is %d\n", m_MergePKTablelist.size());
 
-	//加载能源机生产类型表
+	//加载能源机生产方式表
 	g_GetCDBOperator().GetResourceMechineProductypeList(m_ResourceMechineProducTypeList);
 	log_debug("the m_ResourceMechineProducTypeList size is %d\n", m_ResourceMechineProducTypeList.size());
+
+	//加载用户能源机生产表
+
 
 
 	// 加载机器建筑时间
@@ -2280,10 +2284,10 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 		outpacket.WriteInt(m_MergePKTablelist[i].Level);
 		
 		Props_T resprop;
-		int numOfItemNeeded = 0;
+		int typeOfItemNeeded = 0;
 		if (m_MergePKTablelist[i].Tid1 != 0)
 		{
-			numOfItemNeeded += 1;
+			typeOfItemNeeded += 1;
 			if (getTidEqualGid(m_MergePKTablelist[i].Tid1,resprop))
 			{
 				//vprops.push_back(resprop.pcate);
@@ -2295,7 +2299,7 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 		}
 		if (m_MergePKTablelist[i].Tid2 != 0)
 		{
-			numOfItemNeeded += 1;
+			typeOfItemNeeded += 1;
 			if (getTidEqualGid(m_MergePKTablelist[i].Tid2,resprop))
 			{
 				//vprops.push_back(resprop.pcate);
@@ -2307,7 +2311,7 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 		}
 		if (m_MergePKTablelist[i].Tid3 != 0)
 		{
-			numOfItemNeeded += 1;
+			typeOfItemNeeded += 1;
 			if (getTidEqualGid(m_MergePKTablelist[i].Tid3,resprop))
 			{
 				//vprops.push_back(resprop.pcate);
@@ -2319,7 +2323,7 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 		}
 		if (m_MergePKTablelist[i].Tid4 != 0)
 		{
-			numOfItemNeeded += 1;
+			typeOfItemNeeded += 1;
 			if (getTidEqualGid(m_MergePKTablelist[i].Tid4,resprop))
 			{
 				//vprops.push_back(resprop.pcate);
@@ -2329,7 +2333,7 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 				vprops.push_back(resprop);
 			}
 		}
-		outpacket.WriteInt(numOfItemNeeded);
+		outpacket.WriteInt(typeOfItemNeeded);
 
 		for (int j = 0; j < vprops.size(); j++)
 		{
@@ -2433,7 +2437,7 @@ int CGameServer:: Handle_Mechine_ResourceProduc(TcpHandler * pHandler, NETInputP
 	}
 
 	//通过用户购买的机器表去查找资源机生产类型对应的机器
-	bool rest = getResourceMechine_By_pacte_pfram_level(MechineItem.pcate, MechineItem.pframe, MechineItem.level, ResMePro);
+	bool rest = getResourceMechine_By_pacte_pfram_level(MechineItem.pcate, MechineItem.pframe, MechineItem.level, mode, ResMePro);
 	if (!rest)
 	{
 		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCEPRODUC_REPLAY, pid, 1, pHandler);
@@ -2467,7 +2471,7 @@ int CGameServer:: Handle_Mechine_ResourceProduc(TcpHandler * pHandler, NETInputP
 	//保存用户能源生产数据
 	UserResProInfo.Pcate = ResMePro.Pcate;
 	UserResProInfo.Pframe = ResMePro.Pframe;
-	UserResProInfo.Pmode = mode;
+	UserResProInfo.Pmode = ResMePro.Pype;     //mode;
 	UserResProInfo.Level = ResMePro.Level;
 	UserResProInfo.State = 12;   //正在生产
 	UserResProInfo.Usetime = 0;  //刚开始生产使用时间为0
@@ -2486,6 +2490,142 @@ int CGameServer:: Handle_Mechine_ResourceProduc(TcpHandler * pHandler, NETInputP
 	return 0;
 }
 
+//能源收集
+int CGameServer:: Handdle_Mechine_ResourceCollect(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId)
+{
+	int pcate = pPacket->ReadInt();
+	int pframe = pPacket->ReadInt();
+	int pid = pPacket->ReadInt();
+
+	CPlayer * pUser = reinterpret_cast<CPlayer *>( pHandler->GetUserData() );
+	if (pUser == NULL)
+	{
+		// 失败
+		log_debug("Handdle_Mechine_ResourceCollect user is null\n");
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	//获取用户购买机器的的信息
+	User_Experiment_Mechine_t MechineItem;
+
+	bool ret = getUserMechine_By_Pid(pUser->m_userBuyMechineList, MechineItem, pid);
+	if (!ret)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCEPRODUC_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	//判断主分类是否是资源机
+	MechineType_PcatePframe_T resmechinetype =  g_GetConfigMgr().getMechine_Resource_Type();  //获取资源机类型
+	if( resmechinetype.pcate != pcate)  //如果不是资源机类型不进行收集
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+	if (pcate == MechineItem.pcate && pframe == MechineItem.pframe && MechineItem.status != 7)  //判断能源机当前状态是否能进行收集（7-生产完成，可以收集）
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	User_Experiment_Mechine_t PowerMechineItem;
+	MechineType_PcatePframe_T PowerUpMechine = g_GetConfigMgr().getMechine_PowerMechine_Type(); //获取能源上限机主分类、次分类
+
+	//获取能源上限机信息
+	bool Rue = getPowUpMechine_By_Pcate_Pframe(pUser->m_userBuyMechineList, PowerMechineItem, PowerUpMechine.pcate, PowerUpMechine.pframe);
+	if (!Rue)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	ResourceProducTable_T UserResProducInfo;
+	//获取用户能源机生产信息
+    bool result = pUser->getUserResourceProducInfo(pid, pUser->getID(), pUser->m_UserResourceProducTable_list, UserResProducInfo);
+	if (!result)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	int Pmode = UserResProducInfo.Pmode;
+	int level = UserResProducInfo.Level;
+
+	//获取机器生产的是哪种能源类型
+	ResourceMechineProductype_T Resourcetype;
+	//bool flag = g_GetCDBOperator().GetResourceMechineProductypeList(ResourceMechineProductype_list & ResourceMechineProductypeList)
+	bool falg = getResourceType(m_ResourceMechineProducTypeList, Resourcetype, pcate, pframe, Pmode, level);
+	if (!falg)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	int ResType = Resourcetype.Pype;
+
+	PowerMechineUpLevelTable_T PowerUpType;
+	//获取能源上限值
+	bool rest = getPowerUp_By_Level(m_powerMechineUpLevelList, PowerUpType, PowerMechineItem.level);
+	if (!rest)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	int PowerUpValue = getPowerUpValue(PowerUpType, ResType); //获取某种能源上限值
+	if (PowerUpValue == 0)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	int UserPowerValue = pUser->GetPow(ResType); //获取用户能源值
+
+	if (UserPowerValue >= PowerUpValue)  //如果用户的能源值>=能源机上限值，不能进行收集
+	{
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+    
+	//收集生产能源数值加到用户表中
+	UserPowerValue += Resourcetype.Power;
+	pUser->SetPow(ResType, UserPowerValue);  //更新内存
+
+	int HeroPower = Resourcetype.UserLevel; // To do 英雄经验 （要添加到英雄数据中，还没进行实际操作，需要修改）
+
+	//更新资源机状态到 12-生产完成状态
+    int statue = 12;
+	User_Experiment_Mechine_t UserMechineItem = MechineItem;  //用户购买机器结构
+	ResourceProducTable_T UserProducItem = UserResProducInfo;    //用户生产表结构
+	UserMechineItem.status = statue;
+	UserProducItem.State = statue;
+
+	if (!g_GetCDBOperator().UpdateUserMechineTable(UserMechineItem)) //更新购买机器表
+	{
+		log_debug("UpdateUserMechineTable db operate error\n");
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+
+	MechineItem.status = statue;
+
+	if (!g_GetCDBOperator().UpdateUserProducTable(UserProducItem))  //更新用户生产表
+	{
+		log_debug("UpdateUserProducTable db operate error\n");
+		SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 1, pHandler);
+		return 0;
+	}
+		
+	UserResProducInfo.State = statue;
+
+	// To do 1、 2
+	//1、更新Play_account表
+	//2、更新 英雄经验
+
+	SendCommonEditFlagMsgReply( COMMAND_MECHINE_RESOURCE_COLLECT_REPLAY, pid, 0, pHandler);
+	return 0;
+}
 
 // get list
 int CGameServer::Handle_User_Get_More_Game_List(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId)
@@ -3017,6 +3157,25 @@ bool CGameServer::getUserMechine_By_Pid(UserBuyMechineTable_list & m_userMechine
 	return isfound;
 }
 
+bool CGameServer::getPowUpMechine_By_Pcate_Pframe(UserBuyMechineTable_list & m_userMechineList, User_Experiment_Mechine_t & PowerMechineItem, int pcate, int pframe)
+{
+	int len = m_userMechineList.size();
+	bool isfound = false;
+
+	for (int i =0; i < len; i++)
+	{
+		User_Experiment_Mechine_t oneItem = m_userMechineList[i];
+		if (pcate == oneItem.pcate && pframe == oneItem.pframe)
+		{
+			PowerMechineItem = oneItem;
+			isfound = true;
+			break;
+		}
+	}
+
+	return isfound;
+}
+
 bool CGameServer::ChangeUserMechine_By_Pid(UserBuyMechineTable_list & m_userMechineList, User_Experiment_Mechine_t & m_userMechine)
 {
 	int len = m_userMechineList.size();
@@ -3099,6 +3258,71 @@ bool CGameServer::getUserResMechineCollect_By_Pid(UserResourceProducTable_list &
 		}
 	}
 	return isfound;
+}
+
+bool CGameServer::getResourceType(ResourceMechineProductype_list & ResProList, ResourceMechineProductype_T & ResList, int pcate, int pframe, int mode, int level)
+{
+	int len = ResProList.size();
+	bool isfound = false;
+
+	for (int i = 0; i < len; i++)
+	{
+		ResourceMechineProductype_T oneItem = ResProList[i];
+		if (oneItem.Pcate == pcate && oneItem.Pframe == pframe && oneItem.Pype == mode && oneItem.Level == level)
+		{
+			ResList = oneItem;
+			isfound = true;
+			break;
+		}
+	}
+	return isfound;
+}
+
+bool CGameServer::getPowerUp_By_Level(PowerMechineUpLevelTable_list & PowerUpList, PowerMechineUpLevelTable_T & PowerUpType, int level)
+{
+	int len = PowerUpList.size();
+	bool isfound = false;
+
+	for (int i = 0; i < len; i++)
+	{
+		PowerMechineUpLevelTable_T  oneItem = PowerUpList[i];
+		if (level == oneItem.Level)
+		{
+			PowerUpType = oneItem;
+			isfound = true;
+			break;
+		}
+	}
+
+	return isfound;
+}
+
+int CGameServer::getPowerUpValue(PowerMechineUpLevelTable_T & PowerUpType, int ResType)
+{
+	int PowerUpValue = 0;
+
+	switch ( ResType )
+	{
+		case 1:
+			PowerUpValue = PowerUpType.PowerLimitA;
+			break;
+		case 2:
+			PowerUpValue = PowerUpType.PowerLimitB;
+			break;
+		case 3:
+			PowerUpValue = PowerUpType.PowerLimitC;
+			break;
+		case 4:
+			PowerUpValue = PowerUpType.PowerLimitD;
+			break;
+		case 5:
+			PowerUpValue = PowerUpType.PowerLimitE;
+			break;
+		default:
+			break;
+	}
+
+	return PowerUpValue;
 }
 
 bool CGameServer::ChangeUserInfoMechineCollect_By_Pid(UserInfoMechineCollectTable_list & userInfoCollectList, UserInfoMechineCollect_T & UserInfoCollect)
@@ -3281,7 +3505,7 @@ bool CGameServer::getTidEqualGid(int tid, Props_T & result)
 }
 
 //通过用户购买机器表的主分类、次分类、等级，查找能源机表对应的机器信息
-bool CGameServer::getResourceMechine_By_pacte_pfram_level(int pacte, int pframe, int level, ResourceMechineProductype_T & ResMechineInfo)
+bool CGameServer::getResourceMechine_By_pacte_pfram_level(int pacte, int pframe, int level, int mode, ResourceMechineProductype_T & ResMechineInfo)
 {
 	int len = m_ResourceMechineProducTypeList.size();
 	bool isfound = false;

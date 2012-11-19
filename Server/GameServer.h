@@ -63,6 +63,8 @@ public:
 	int             Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId = 0);   // 获取道具合成条件
 	int             Handle_Get_ResourceProduc_Condition(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId = 0);   // 获取能源机生产条件
 	int             Handle_Mechine_ResourceProduc(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);        // 能源机生产
+	int             Handdle_Mechine_ResourceCollect(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);      // 能源收集
+
 
 	void            Handle_Echo(SocketHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);				// 用户echo消息
 	void            Handle_GetGoods(SocketHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);			// 用户获取道具
@@ -95,15 +97,20 @@ public:
 	bool			ChangeUserInfoMechineCollect_By_Pid(UserInfoMechineCollectTable_list & userInfoCollectList, UserInfoMechineCollect_T & UserInfoCollect);
 	bool			getUserInfoMechineCollect_By_Pid(UserInfoMechineCollectTable_list & userInfoCollectList, UserInfoMechineCollect_T & UserInfoCollect, int gid);
 	bool			getUserMechine_By_Pid(UserBuyMechineTable_list & m_userMechineList, User_Experiment_Mechine_t & m_userMechine, int gid);
+	bool            getPowUpMechine_By_Pcate_Pframe(UserBuyMechineTable_list & m_userMechineList, User_Experiment_Mechine_t & PowerMechineItem, int pcate, int pframe);//获取能用上限机信息
 	int				getNeedUserLevel(int instorLevel);//获取用户需要等级
 	bool			getInstorUplevelComsum(int instorLevel, InstrutorUpLevelTable_T & oneitem);
 	bool			getMechineUplevelComsum(int pcate, int pframe, int level, MechineUpLevelComsumTable_T & oneitem);
 	bool			getCollectTimeByCollItem(UserInfoMechineCollect_T & item, int level);							// 获取收集需要的时间
 	bool			getCollectItemByPcateLevel(InfoMechineCollectTable_T & item, int pcate, int pframe, int level);	// 获取收集特定item
 	bool            getTidEqualGid(int tid, Props_T & result);     //获取tid和Gid相等的主分类和此分类值
-	bool            getResourceMechine_By_pacte_pfram_level(int pacte, int pframe, int level, ResourceMechineProductype_T & ResMechineInfo); //通过用户购买机器表的主分类、次分类、等级，查找能源机表对应的机器信息
+	bool            getResourceMechine_By_pacte_pfram_level(int pacte, int pframe, int level, int mode, ResourceMechineProductype_T & ResMechineInfo); //通过用户购买机器表的主分类、次分类、等级，查找能源机表对应的机器信息
 	bool            getUserResMechineCollect_By_Pid(UserResourceProducTable_list & userResCollectList, ResourceProducTable_T & userResCollect, int gid); //获取用户收集表信息
 	bool            ChangUserResMechineProduc(UserResourceProducTable_list & userresmechineproduc, ResourceProducTable_T & UserResMechineProduc); //更改用户资源机信息
+	bool            getResourceType(ResourceMechineProductype_list & ResProList, ResourceMechineProductype_T & ResList, int pcate, int pframe, int mode, int level);  //获取能源机生产能源的类型
+	bool            getPowerUp_By_Level(PowerMechineUpLevelTable_list & PowerUpList, PowerMechineUpLevelTable_T & PowerUpType, int level);  //获取能源上限值信息
+	int             getPowerUpValue(PowerMechineUpLevelTable_T & PowerUpType, int ResType); //获取某种能源上限值
+
 
 
 	void			LoadSystemMsg();													// 提前加载系统需要的表格
