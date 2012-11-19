@@ -810,6 +810,23 @@ bool CGameServer::getMechineInfoByPcatePframe(int pcate, int pframe, SysMechineI
 	return isFound;
 }
 
+bool CGameServer:: getUserMechineInfoByPcatePframe(CPlayer *UserName, int pcate, int pframe, User_Experiment_Mechine_t & Mechine)
+{
+	int len =UserName->m_userBuyMechineList.size();
+	bool isfound = false;
+	for (int i = 0; i < len; i++)
+	{
+		if (UserName->m_userBuyMechineList[i].pcate == pcate && UserName->m_userBuyMechineList[i].pframe == pframe)
+		{
+			Mechine = UserName->m_userBuyMechineList[i];
+			isfound = true;
+			break;
+		}
+	}
+
+	return isfound;
+}
+
 // 购买产品
 int  CGameServer::Handle_User_Buy_Production(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId)
 {
@@ -2346,6 +2363,27 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 	outpacket.End();
 
 	pHandler->Send(&outpacket);	
+}
+
+int CGameServer::Handle_Get_PropsSynthesis_Request(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId)
+{
+	int tid = pPacket->ReadInt();  //合成id
+
+	CPlayer * pUser = reinterpret_cast<CPlayer *>( pHandler->GetUserData() );
+	if (pUser == NULL)
+	{
+		// 失败
+		log_debug("Handle_Get_PropsSynthesis_Request user is null\n");
+		SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+		return 0;
+	}
+
+	//获取道具合成机的pcate, pframe
+	MechineType_PcatePframe_T PropMechinePcate = g_GetConfigMgr().getMechine_Info_Type();
+
+	//在购买机器表中获取道具合成机的状态
+
+
 }
 
 //返回能源机生产条件请求

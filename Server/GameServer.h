@@ -61,6 +61,7 @@ public:
 	int             Handle_User_Info_Mechine_CollectCoin(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);	// 情报机收集
 	int             Handle_User_Info_Mechine_CollectSpeed(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);// 情报机收集加速
 	int             Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId = 0);   // 获取道具合成条件
+	int             Handle_Get_PropsSynthesis_Request(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId = 0);     // 道具合成请求
 	int             Handle_Get_ResourceProduc_Condition(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId = 0);   // 获取能源机生产条件
 	int             Handle_Mechine_ResourceProduc(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);        // 能源机生产
 	int             Handdle_Mechine_ResourceCollect(TcpHandler * pHandler, NETInputPacket * pPacket, int ProxyId = 0);      // 能源收集
@@ -79,7 +80,8 @@ private:
 	void			get_production_by_pcate(OrmenGoodsStruct_t_list& pplist, int pcate); // 获取特定产品
 	bool			get_production_price_by_pcate(int & price, int & money, int pcate, int pframe);	// 获取特定产品的价格
 	bool			get_production_sellprice_by_pcate(int & iscansell, int & coin, int pcate, int pframe);				// 获取销售价格
-	bool			getMechineInfoByPcatePframe(int pcate, int pframe, SysMechineInfo & Mechine);							 // 获取特定类型的机器
+	bool			getMechineInfoByPcatePframe(int pcate, int pframe, SysMechineInfo & Mechine);					   // 获取特定类型的机器
+	bool            getUserMechineInfoByPcatePframe(CPlayer *UserName, int pcate, int pframe, User_Experiment_Mechine_t & Mechine);    //获取用户特定类型机器
 	void			sent_user_mechine(vector<ReturnMechineInfo> & returnMlist, CPlayer *pPlayer);
 	void			packet_mechine_for_user(ReturnMechineInfoTable_list  & returnMechineList, MechineType_PcatePframe_T & MechinePcate, int gameid, UserBuyMechineTable_list & m_userMechineList);
 	void			packet_mechine_for_user(ReturnMechineInfoTable_list  & returnMechineList, MechineType_PcatePframe_T & MechinePcate, int gameid, User_Experiment_Mechine_t & m_userMechine);

@@ -190,6 +190,9 @@ int CentServer::ProcessPacket(short nMsgType, NETInputPacket *pPacket, CentHandl
 	case COMMAND_GET_PROPSSYNTHESIS_CONDITION:															   
 		m_pGameServer->Handle_Get_PropsSynthesis_Condition(pHandler, pPacket, pHandler->GetProxy());       //  获取道具合成条件
 		break;
+	case COMMAND_PROPSSYNITHESIS_REQUEST:
+		m_pGameServer->Handle_Get_PropsSynthesis_Request(pHandler, pPacket, pHandler->GetProxy());         //   道具合成请求
+		break;
 	case COMMAND_GET_RESOURCEPRODUC_CONDITION:
 		m_pGameServer->Handle_Get_ResourceProduc_Condition(pHandler, pPacket, pHandler->GetProxy());       //  获取能源机生产条件
 		break;

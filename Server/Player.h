@@ -61,7 +61,7 @@ typedef struct _SysMechineInfo
 	short cossflag;
 }SysMechineInfo;
 
-typedef struct User_Experiment_Mechine_s
+typedef struct User_Experiment_Mechine_s  //ÓÃ»§¹ºÂò»úÆ÷
 {
 	int Gid;
 	int pcate;

@@ -40,6 +40,9 @@ ConfigMgr::ConfigMgr(void)
 
 	m_Role.pcate = 20;
 	m_Role.pframe = 211;
+
+	m_Prop_Mechine.pcate = 211;
+	m_Prop_Mechine.pframe = 2010;
 }
 
 ConfigMgr::~ConfigMgr(void)

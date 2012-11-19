@@ -293,6 +293,7 @@ private:
 	MechineType_PcatePframe_T m_Info_Mechine;		// 情报机
 	MechineType_PcatePframe_T m_Resource_Mechine;	// 资源机
 	MechineType_PcatePframe_T m_Role;	// 主角
+	MechineType_PcatePframe_T m_Prop_Mechine;  //道具合成机
 	MechineComStructTimeTable_List m_Mechine_ConStructTimeList;		// 升级消耗表
 
 };
