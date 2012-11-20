@@ -43,6 +43,24 @@ ConfigMgr::ConfigMgr(void)
 
 	m_Prop_Mechine.pcate = 211;
 	m_Prop_Mechine.pframe = 2010;
+
+	m_Coin.pcate = 10;
+	m_Coin.pframe = 100;
+
+	m_Time.pcate = 10;
+	m_Time.pframe = 101;
+
+	m_Money.pcate = 10;
+	m_Money.pframe = 102;
+
+	m_SourceA.pcate = 109;
+	m_SourceA.pframe = 9001;
+
+	m_SourceB.pcate = 109;
+	m_SourceB.pframe = 9002;
+
+	m_SourceC.pcate = 109;
+	m_SourceC.pframe = 9003;
 }
 
 ConfigMgr::~ConfigMgr(void)

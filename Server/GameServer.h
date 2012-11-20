@@ -112,6 +112,7 @@ public:
 	bool            getResourceType(ResourceMechineProductype_list & ResProList, ResourceMechineProductype_T & ResList, int pcate, int pframe, int mode, int level);  //获取能源机生产能源的类型
 	bool            getPowerUp_By_Level(PowerMechineUpLevelTable_list & PowerUpList, PowerMechineUpLevelTable_T & PowerUpType, int level);  //获取能源上限值信息
 	int             getPowerUpValue(PowerMechineUpLevelTable_T & PowerUpType, int ResType); //获取某种能源上限值
+	bool            getPropMergeTableInfo_By_Tid(MergePKTable_list & MergePKList, MergePKTable_T & MergeInfo, int tid);  //获取道具合成表信息
 
 
 

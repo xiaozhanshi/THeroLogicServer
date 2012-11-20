@@ -2365,6 +2365,7 @@ int CGameServer::Handle_Get_PropsSynthesis_Condition(TcpHandler * pHandler, NETI
 	pHandler->Send(&outpacket);	
 }
 
+//道具合成请求
 int CGameServer::Handle_Get_PropsSynthesis_Request(TcpHandler * pHandler, NETInputPacket *pPacket, int ProxyId)
 {
 	int tid = pPacket->ReadInt();  //合成id
@@ -2379,9 +2380,109 @@ int CGameServer::Handle_Get_PropsSynthesis_Request(TcpHandler * pHandler, NETInp
 	}
 
 	//获取道具合成机的pcate, pframe
-	MechineType_PcatePframe_T PropMechinePcate = g_GetConfigMgr().getMechine_Info_Type();
+	MechineType_PcatePframe_T PropMechinePcate = g_GetConfigMgr().getMechine_PropMerge_Type();
 
 	//在购买机器表中获取道具合成机的状态
+	User_Experiment_Mechine_t MechineInfo;
+	bool ret = getUserMechineInfoByPcatePframe(pUser, PropMechinePcate.pcate, PropMechinePcate.pframe, MechineInfo);
+	if (!ret)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+		return 0;
+	}
+
+	if (MechineInfo.status != 0)  //如果合成机不是 0-正常状态，不能进行合成
+	{
+		SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+		return 0;
+	}
+
+
+	//判断仓库是否已满 To do
+
+
+	//获取道具合成表信息
+	MergePKTable_T MergePkInfo;
+	bool flat = getPropMergeTableInfo_By_Tid(m_MergePKTablelist, MergePkInfo, tid);
+	if (!flat)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+		return 0;
+	}
+
+	int Tid1 = MergePkInfo.Tid1;
+	int Tid2 = MergePkInfo.Tid2;
+	int Tid3 = MergePkInfo.Tid3;
+	int Tid4 = MergePkInfo.Tid4;
+	int Num1 = MergePkInfo.Nums1;
+	int Num2 = MergePkInfo.Nums2;
+	int Num3 = MergePkInfo.Nums3;
+	int Num4 = MergePkInfo.Nums4;
+
+	//获取道具合成原材料表信息
+	vector<Props_T> Vec_RawMaterial;
+	Props_T RawMaterial;
+	//getRawMaterialInfo(int Tid, Props_T & RawMaterial, vector<Props_T> Vec_RawMaterial) 可以考虑用这个函数封装以下4条if代码
+	if(getTidEqualGid(Tid1, RawMaterial))
+	{
+		RawMaterial.num = Num1;
+		Vec_RawMaterial.push_back(RawMaterial);
+	}
+	if(getTidEqualGid(Tid2, RawMaterial))
+	{
+		RawMaterial.num = Num2;
+		Vec_RawMaterial.push_back(RawMaterial);
+	}
+	if(getTidEqualGid(Tid3, RawMaterial))
+	{
+		RawMaterial.num = Num3;
+		Vec_RawMaterial.push_back(RawMaterial);
+	}
+	if(getTidEqualGid(Tid4, RawMaterial))
+	{
+		RawMaterial.num = Num4;
+		Vec_RawMaterial.push_back(RawMaterial);
+	}
+
+	int len = Vec_RawMaterial.size();  //容器是否为空
+	if (len == 0)
+	{
+		SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+		return 0;
+	}
+
+	//分别获取普通货币、时间、SourceA、SourceB、SourceC的主分类pcate，此分类pframe
+	MechineType_PcatePframe_T Coin = g_GetConfigMgr().get_Coin_Type();
+	MechineType_PcatePframe_T Time = g_GetConfigMgr().get_Time_Type();
+	MechineType_PcatePframe_T SourceA = g_GetConfigMgr().get_SourceA_Type();
+	MechineType_PcatePframe_T SourceB = g_GetConfigMgr().get_SourceB_Type();
+	MechineType_PcatePframe_T SourceC = g_GetConfigMgr().get_SourceC_Type();
+
+	//获取用户目前拥有的材料数量
+	int UserCoin = pUser->m_coin;
+	int UserMoney = pUser->m_money;
+	//int UserSourceA = pUser->
+
+
+	//判断需要的是哪种材料，并且判断用户拥有该材料的数值是否满足合成需要的数量值
+	for (int i = 0; i < len; i++)
+	{
+		if (Vec_RawMaterial[i].pcate == Coin.pcate && Vec_RawMaterial[i].pframe == Coin.pframe)
+		{
+			if (UserCoin < Vec_RawMaterial[i].num)
+			{
+				SendCommonEditFlagMsgReply( COMMAND_PROPSSYNITHESIS_REPLY, tid, 1, pHandler);
+				return 0;
+			}
+
+		}
+	}
+	
+
+
+	//获取合成道具需要的原材料种类及数量
+
+
 
 
 }
@@ -3361,6 +3462,25 @@ int CGameServer::getPowerUpValue(PowerMechineUpLevelTable_T & PowerUpType, int R
 	}
 
 	return PowerUpValue;
+}
+
+bool CGameServer::getPropMergeTableInfo_By_Tid(MergePKTable_list & MergePKList, MergePKTable_T & MergeInfo, int tid)
+{
+	int len = MergePKList.size();
+	bool isfound = false;
+
+	for (int i = 0; i < len; i++)
+	{
+		MergePKTable_T oneItem = MergePKList[i];
+		if (tid == oneItem.Gid)
+		{
+			MergeInfo = oneItem;
+			isfound = true;
+			break;
+		}
+	}
+
+	return isfound;
 }
 
 bool CGameServer::ChangeUserInfoMechineCollect_By_Pid(UserInfoMechineCollectTable_list & userInfoCollectList, UserInfoMechineCollect_T & UserInfoCollect)

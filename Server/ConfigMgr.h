@@ -179,6 +179,35 @@ public:
 	{
 		return m_Resource_Mechine;
 	}
+	const MechineType_PcatePframe_T & getMechine_PropMerge_Type()const
+	{
+		return m_Prop_Mechine;
+	}
+	const MechineType_PcatePframe_T & get_Coin_Type()const
+	{
+		return m_Coin;
+	}
+	const MechineType_PcatePframe_T & get_Time_Type()const
+	{
+		return m_Time;
+	}
+	const MechineType_PcatePframe_T & get_Menoy_Type()const
+	{
+		return m_Money;
+	}
+	const MechineType_PcatePframe_T & get_SourceA_Type()const
+	{
+		return m_SourceA;
+	}
+	const MechineType_PcatePframe_T & get_SourceB_Type()const
+	{
+		return m_SourceB;
+	}
+	const MechineType_PcatePframe_T & get_SourceC_Type()const
+	{
+		return m_SourceC;
+	}
+
 
 	bool getConfig(const char * key, const char * attr, string & v)
 	{
@@ -294,6 +323,12 @@ private:
 	MechineType_PcatePframe_T m_Resource_Mechine;	// 资源机
 	MechineType_PcatePframe_T m_Role;	// 主角
 	MechineType_PcatePframe_T m_Prop_Mechine;  //道具合成机
+	MechineType_PcatePframe_T m_Coin;      //普通货币
+	MechineType_PcatePframe_T m_Time;      //时间
+	MechineType_PcatePframe_T m_Money;     //高级货币
+	MechineType_PcatePframe_T m_SourceA;   //材料A
+	MechineType_PcatePframe_T m_SourceB;   //材料B
+	MechineType_PcatePframe_T m_SourceC;   //材料C
 	MechineComStructTimeTable_List m_Mechine_ConStructTimeList;		// 升级消耗表
 
 };
